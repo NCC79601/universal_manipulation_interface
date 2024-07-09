@@ -1,0 +1,16 @@
+pyexiftool
+click
+numpy==1.26.4
+tqdm
+opencv-contrib-python
+av
+scipy
+pandas
+zarr
+pyyaml
+matplotlib
+scikit-fda
+qrcode
+Pillow
+imageio
+imagecodecs

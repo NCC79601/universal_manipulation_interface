@@ -42,6 +42,7 @@ register_codecs()
 @click.option('-nm', '--no_mirror', is_flag=True, default=False, help="Disable mirror observation by masking them out")
 @click.option('-ms', '--mirror_swap', is_flag=True, default=False)
 @click.option('-n', '--num_workers', type=int, default=None)
+
 def main(input, output, out_res, out_fov, compression_level, 
          no_mirror, mirror_swap, num_workers):
     if os.path.isfile(output):
@@ -81,6 +82,8 @@ def main(input, output, out_res, out_fov, compression_level,
         ipath = pathlib.Path(os.path.expanduser(ipath)).absolute()
         demos_path = ipath.joinpath('demos')
         plan_path = ipath.joinpath('dataset_plan.pkl')
+        print(f'dataset plan path: {plan_path}')
+        print(os.path.exists(plan_path))
         if not plan_path.is_file():
             print(f"Skipping {ipath.name}: no dataset_plan.pkl")
             continue
@@ -271,4 +274,5 @@ def main(input, output, out_res, out_fov, compression_level,
 
 # %%
 if __name__ == "__main__":
+    
     main()

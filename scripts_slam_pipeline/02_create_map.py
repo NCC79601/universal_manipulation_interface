@@ -54,6 +54,8 @@ def main(input_dir, map_path, docker_image, no_docker_pull, no_mask):
 
     mount_target = pathlib.Path('/data')
     csv_path = mount_target.joinpath('mapping_camera_trajectory.csv')
+    # feat: add point cloud output
+    point_cloud_path = mount_target.joinpath('point_cloud.csv')
     video_path = mount_target.joinpath('raw_video.mp4')
     json_path = mount_target.joinpath('imu_data.json')
     mask_path = mount_target.joinpath('slam_mask.png')
@@ -81,6 +83,8 @@ def main(input_dir, map_path, docker_image, no_docker_pull, no_mask):
         '--input_video', str(video_path),
         '--input_imu_json', str(json_path),
         '--output_trajectory_csv', str(csv_path),
+        # feat: add point cloud output
+        '--output_point_cloud_csv', str(point_cloud_path),
         '--save_map', str(map_mount_target)
     ]
     if not no_mask:
