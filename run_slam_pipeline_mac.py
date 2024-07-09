@@ -15,6 +15,8 @@ import pathlib
 import click
 import subprocess
 
+slam_docker_image = "orb_slam3:pc_new"
+
 # %%
 @click.command()
 @click.argument('session_dir', nargs=-1)
@@ -45,7 +47,8 @@ def main(session_dir, calibration_dir):
         assert script_path.is_file()
         cmd = [
             'python', str(script_path),
-            str(session)
+            str(session),
+            '--no_docker_pull',
         ]
         result = subprocess.run(cmd)
         assert result.returncode == 0
@@ -63,7 +66,7 @@ def main(session_dir, calibration_dir):
                 '--input_dir', str(mapping_dir),
                 '--map_path', str(map_path),
                 '--no_docker_pull',
-                '--docker_image', "orb_slam3:latest"
+                '--docker_image', slam_docker_image
             ]
             result = subprocess.run(cmd)
             assert result.returncode == 0
@@ -77,7 +80,7 @@ def main(session_dir, calibration_dir):
             '--input_dir', str(demo_dir),
             '--map_path', str(map_path),
             '--no_docker_pull',
-            '--docker_image', "orb_slam3:latest"
+            '--docker_image', slam_docker_image
         ]
         result = subprocess.run(cmd)
         assert result.returncode == 0
