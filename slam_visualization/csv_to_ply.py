@@ -4,7 +4,7 @@ from typing import Union
 
 import numpy as np
 
-def save_pointcloud_from_ORB_SLAM(input_file: Union[Path, str], output_file: Union[Path,str] = "out.ply"):
+def save_point_cloud_from_ORB_SLAM(input_file: Union[Path, str], output_file: Union[Path,str] = "out.ply"):
     """Converts a comma separated list of map point coordinates into
     PLY format for viewing the generated map.
 
@@ -17,7 +17,7 @@ def save_pointcloud_from_ORB_SLAM(input_file: Union[Path, str], output_file: Uni
         described here: https://paulbourke.net/dataformats/ply/
     """
 
-    coords = np.genfromtxt(input_file, delimiter=", ", skip_header=1)
+    coords = np.genfromtxt(input_file, delimiter=",", skip_header=1)
 
     x = coords[:, 0]
     y = coords[:, 1]
@@ -44,24 +44,11 @@ def save_trajectory_from_ORB_SLAM(input_file: Union[Path, str], output_file: Uni
     Where the R terms are the rotation and t terms are the translation terms
     of the homogeneous transformation matrix T_w_cam0.
     """
-    x = []
-    y = []
-    z = []
+    coords = np.genfromtxt(input_file, delimiter=",", skip_header=1)
 
-    with open(input_file, "r") as file:
-        lines = file.readlines()
-
-    for line in lines:
-        cols = line.strip().split(" ")
-
-        x.append(float(cols[4]))
-        y.append(float(cols[8]))
-        z.append(float(cols[12]))
-
-    # Each trajectory point is shown as a "point" in the "point cloud" which is the trajectory
-    x = np.array(x)
-    y = np.array(y)
-    z = np.array(z)
+    x = coords[:, 5]
+    y = coords[:, 6]
+    z = coords[:, 7]
 
     # RGB values for each point on the trajectory, set to be light green
     r = np.ones_like(x) * 144
@@ -83,11 +70,13 @@ def save_trajectory_from_ORB_SLAM(input_file: Union[Path, str], output_file: Uni
 
 
 if __name__ == "__main__":
-    input_file = "/path/to/point_cloud.txt" # ReferenceMapPoints seem to work better, use that file
-    output_file = "./output.ply"
+    # just for testing locally
 
-    input_trajectory = "/path/to/trajectory_file.txt"
-    output_trajectory = "./output_trajectory.ply"
+    input_map = "/Users/max/Desktop/universal_manipulation_interface/example_demo_session/demos/demo_C3441328164125_2024.01.10_11.04.02.335867/point_cloud.csv"
+    output_map = "/Users/max/Desktop/universal_manipulation_interface/example_demo_session/demos/demo_C3441328164125_2024.01.10_11.04.02.335867/point_cloud.ply"
 
-    save_pointcloud_from_ORB_SLAM(input_file, output_file)
+    input_trajectory = "/Users/max/Desktop/universal_manipulation_interface/example_demo_session/demos/demo_C3441328164125_2024.01.10_11.04.02.335867/absolute_camera_trajectory.csv"
+    output_trajectory = "/Users/max/Desktop/universal_manipulation_interface/example_demo_session/demos/demo_C3441328164125_2024.01.10_11.04.02.335867/absolute_camera_trajectory.ply"
+
+    save_point_cloud_from_ORB_SLAM(input_map, output_map)
     save_trajectory_from_ORB_SLAM(input_trajectory, output_trajectory)

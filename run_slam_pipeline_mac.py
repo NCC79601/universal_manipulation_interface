@@ -122,6 +122,12 @@ def main(session_dir, calibration_dir):
         result = subprocess.run(cmd)
         assert result.returncode == 0
 
+        # feat: add slam visualization (convert to ply)
+        print("############# slam_visualization ###########")
+        from slam_visualization import convert_output_to_ply
+        convert_output_to_ply(session)
+        print('SLAM Visualization complete, map and trajectories are saved int ply format')
+
 ## %%
 if __name__ == "__main__":
     main()
