@@ -12,6 +12,4 @@ fi
 # Execute the command to get aruco tag PDF
 python ./scripts/gen_aruco_tag_pdf.py -o ./aruco_tags
 
-python ./scripts/gen_charuco_board.py -o ./aruco_tags/charuco_board.pdf
-
-echo "Aruco tags and charuco board generated in ./aruco_tags folder."
+echo "Aruco tags generated in ./aruco_tags folder."
