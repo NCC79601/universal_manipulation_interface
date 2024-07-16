@@ -67,8 +67,9 @@ def main(tag_detection, csv_trajectory, output, tag_id, keyframe_only):
         
         tag = tag_dict[tag_id]
         pose = np.concatenate([tag['tvec'], tag['rvec']])
-        tx_cam_tag = pose_to_mat(pose)
-        tx_slam_cam = cam_pose[tum_idx]
+        tx_cam_tag = pose_to_mat(pose)  # transform from camera to tag
+        tx_slam_cam = cam_pose[tum_idx] # the closest slam camera pose to the tag detection
+                                        # (world -> camera)
 
         # filter cam pose
         dist_to_cam = np.linalg.norm(tx_cam_tag[:3,3])
@@ -81,9 +82,9 @@ def main(tag_detection, csv_trajectory, output, tag_id, keyframe_only):
         img_center = np.array([2704, 2028], dtype=np.float32) / 2
         dist_to_center = np.linalg.norm(tag_center_pix - img_center) / img_center[1]
         if dist_to_center > 0.6:
-            continue
+            continue # filter out tags that are too far from the center
 
-        tx_slam_tag = tx_slam_cam @ tx_cam_tag
+        tx_slam_tag = tx_slam_cam @ tx_cam_tag # world -> tag
         all_tx_slam_tag.append(tx_slam_tag)
         all_idxs.append(tum_idx)
     all_tx_slam_tag = np.array(all_tx_slam_tag)

@@ -3,8 +3,8 @@
 # 删除 ~/Desktop/UMI/ 文件夹中的所有内容
 rm -rf ~/Desktop/universal_manipulation_interface/example_demo_session/*
 
-# 将 ~/Desktop/our_videos/example_demo_session 文件夹复制到 ~/Desktop/UMI
-cp -r ~/Desktop/our_videos/example_demo_session ~/Desktop/universal_manipulation_interface
+# 将 ~/Desktop/demo_videos/example_demo_session 文件夹复制到 ~/Desktop/UMI
+cp -r ~/Desktop/demo_videos/example_demo_session ~/Desktop/universal_manipulation_interface
 
 # 执行 python 脚本
 python run_slam_pipeline_mac.py ~/Desktop/universal_manipulation_interface/example_demo_session
