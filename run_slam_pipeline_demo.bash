@@ -10,4 +10,4 @@ cp -r ~/Desktop/demo_videos/example_demo_session ~/Desktop/universal_manipulatio
 python run_slam_pipeline_mac.py ~/Desktop/universal_manipulation_interface/example_demo_session
 
 # 生成训练数据集
-python scripts_slam_pipeline/07_generate_replay_buffer.py -o example_demo_session/dataset.zarr.zip example_demo_session
+# python scripts_slam_pipeline/07_generate_replay_buffer.py -o example_demo_session/dataset.zarr.zip example_demo_session

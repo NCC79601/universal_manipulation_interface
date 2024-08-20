@@ -63,8 +63,7 @@ def main(input_dir, map_path, docker_image, no_docker_pull, no_mask):
     mask_path = mount_target.joinpath('slam_mask.png')
     if not no_mask:
         mask_write_path = video_dir.joinpath('slam_mask.png')
-        # fix: adjust size of slam_mask
-        slam_mask = np.zeros((1080, 1920), dtype=np.uint8)
+        slam_mask = np.zeros((2028, 2704), dtype=np.uint8)
         slam_mask = draw_predefined_mask(
             slam_mask, color=255, mirror=True, gripper=False, finger=True)
         cv2.imwrite(str(mask_write_path.absolute()), slam_mask)
@@ -82,8 +81,7 @@ def main(input_dir, map_path, docker_image, no_docker_pull, no_mask):
         docker_image,
         '/ORB_SLAM3/Examples/Monocular-Inertial/gopro_slam',
         '--vocabulary', '/ORB_SLAM3/Vocabulary/ORBvoc.txt',
-        # '--setting', '/ORB_SLAM3/Examples/Monocular-Inertial/gopro10_maxlens_fisheye_setting_v1_720.yaml',
-        '--setting', '/ORB_SLAM3/Examples/Monocular-Inertial/gopro11_maxlens_fisheye_setting_v1_1080.yaml',
+        '--setting', '/ORB_SLAM3/Examples/Monocular-Inertial/gopro10_maxlens_fisheye_setting_v1_720.yaml',
         '--input_video', str(video_path),
         '--input_imu_json', str(json_path),
         '--output_trajectory_csv', str(csv_path),
