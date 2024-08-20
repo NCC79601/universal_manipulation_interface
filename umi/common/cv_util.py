@@ -7,6 +7,7 @@ import copy
 import numpy as np
 import cv2
 import scipy.interpolate as si
+import os
 
 # =================== intrinsics ===================
 
@@ -259,16 +260,15 @@ def draw_canonical_polygon(img: np.ndarray, coords: np.ndarray, color: tuple):
     cv2.fillPoly(img, pts, color=color)
     return img
 
+# feat: use config written in umi/asset/*.json to get coords
+current_path = os.path.abspath(__file__)
+mask_config_path = os.path.join(os.path.dirname(os.path.dirname(current_path)), 'asset', 'gopro_11_hero_maxlens_2_0_mask.json')
+with open(mask_config_path, 'r') as f:
+    mask_config = json.load(f)
+
 def get_mirror_canonical_polygon():
-    left_pts = [
-        [540, 1700],
-        [680, 1450],
-        [590, 1070],
-        [290, 1130],
-        [290, 1770],
-        [550, 1770]
-    ]
-    resolution = [2028, 2704]
+    left_pts = mask_config["mirror_mask_pts"]
+    resolution = mask_config["resolution"]
     left_coords = pixel_coords_to_canonical(left_pts, resolution)
     right_coords = left_coords.copy()
     right_coords[:,0] *= -1
@@ -281,7 +281,7 @@ def get_mirror_crop_slices(img_shape=(1080,1920), left=True):
         [290, 1120],
         [650, 1480]
     ]
-    resolution = [2028, 2704]
+    resolution = mask_config["resolution"]
     left_coords = pixel_coords_to_canonical(left_pts, resolution)
     if not left:
         left_coords[:,0] *= -1
@@ -295,15 +295,8 @@ def get_mirror_crop_slices(img_shape=(1080,1920), left=True):
 
 
 def get_gripper_canonical_polygon():
-    left_pts = [
-        [1352, 1730],
-        [1100, 1700],
-        [650, 1500],
-        [0, 1350],
-        [0, 2028],
-        [1352, 2704]
-    ]
-    resolution = [2028, 2704]
+    left_pts = mask_config["gripper_mask_pts"]
+    resolution = mask_config["resolution"]
     left_coords = pixel_coords_to_canonical(left_pts, resolution)
     right_coords = left_coords.copy()
     right_coords[:,0] *= -1
@@ -312,7 +305,7 @@ def get_gripper_canonical_polygon():
 
 def get_finger_canonical_polygon(height=0.37, top_width=0.25, bottom_width=1.4):
     # image size
-    resolution = [2028, 2704]
+    resolution = mask_config["resolution"]
     img_h, img_w = resolution
 
     # calculate coordinates
@@ -333,12 +326,14 @@ def get_finger_canonical_polygon(height=0.37, top_width=0.25, bottom_width=1.4):
     bottom_right_x *= img_h
 
     # create polygon points for opencv API
-    points = [[
-        [bottom_left_x, bottom_y],
-        [top_left_x, top_y],
-        [top_right_x, top_y],
-        [bottom_right_x, bottom_y]
-    ]]
+    # points = [[
+    #     [bottom_left_x, bottom_y],
+    #     [top_left_x, top_y],
+    #     [top_right_x, top_y],
+    #     [bottom_right_x, bottom_y]
+    # ]]
+    # fix: adjust the finger mask pts
+    points = [mask_config["finger_mask_pts"]]
     coords = pixel_coords_to_canonical(points, img_shape=resolution)
     return coords
 
@@ -355,7 +350,12 @@ def draw_predefined_mask(img, color=(0,0,0), mirror=True, gripper=True, finger=T
         pts = canonical_to_pixel_coords(coords, img.shape[:2])
         pts = np.round(pts).astype(np.int32)
         flag = cv2.LINE_AA if use_aa else cv2.LINE_8
-        cv2.fillPoly(img,[pts], color=color, lineType=flag)
+        try:
+            cv2.fillPoly(img,[pts], color=color, lineType=flag)
+        except(Exception) as e:
+            print(pts)
+            print('EXCEPTION:', e)
+            exit(1)
     return img
 
 def get_gripper_with_finger_mask(img, height=0.37, top_width=0.25, bottom_width=1.4, color=(0,0,0)):
@@ -437,3 +437,6 @@ def get_image_transform(in_res, out_res, crop_ratio:float = 1.0, bgr_to_rgb: boo
         return img
     
     return transform
+
+if __name__ == '__main__':
+    print(get_mirror_canonical_polygon())

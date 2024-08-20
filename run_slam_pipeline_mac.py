@@ -48,7 +48,7 @@ def main(session_dir, calibration_dir):
         cmd = [
             'python', str(script_path),
             str(session),
-            # '--no_docker_pull',
+            '--no_docker_pull', 
         ]
         result = subprocess.run(cmd)
         assert result.returncode == 0

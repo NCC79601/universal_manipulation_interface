@@ -1,4 +1,7 @@
-from .csv_to_ply import save_trajectory_from_ORB_SLAM, save_point_cloud_from_ORB_SLAM
+try:
+    from .csv_to_ply import save_trajectory_from_ORB_SLAM, save_point_cloud_from_ORB_SLAM
+except ImportError:
+    from csv_to_ply import save_trajectory_from_ORB_SLAM, save_point_cloud_from_ORB_SLAM
 import os
 from pathlib import Path
 from typing import Union
